@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fitmax</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --vh: 100%;
+    }
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      background-color: #effffa;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fixed Top Layer -->
+  <div class="fixed top-0 left-0 w-full z-10 bg-[#effffa]">
+    <div class="p-4 space-y-4">
+      <div class="flex space-x-3">
+        <a href="tel:9961955414">
+          <button class="flex items-center space-x-2 bg-[#374151] text-white rounded-md px-4 py-2">
+            <i class="fas fa-phone-alt text-lg"></i>
+            <span>Call</span>
+          </button>
+        </a>
+        <button id="openMapBtn" class="flex items-center space-x-2 bg-[#374151] text-white rounded-md px-4 py-2">
+          <i class="fas fa-map-marker-alt text-lg"></i>
+          <span>Directions</span>
+        </button>
+      </div>
+      <div class="flex justify-center">
+        <img src="https://assets.onecompiler.app/43b7v7mer/3ww47radw/1000163970.jpg" alt="FitMax logo" class="max-w-full h-auto" width="320" height="100" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Scrollable Icons -->
+  <div class="absolute top-[250px] left-0 right-0 bottom-0 overflow-y-auto px-4 pb-28 space-y-4 z-0">
+    <!-- 6 Icon Cards -->
+    <div class="bg-white rounded-xl shadow p-5 flex items-center space-x-4">
+      <img src="https://storage.googleapis.com/a1aa/image/bda8cb5d-aceb-4156-b9cd-992a5b9b0bbd.jpg" class="w-14 h-14 rounded" alt="Icon">
+      <div>
+        <h2 class="font-bold text-lg">Enquiry</h2>
+        <p>Ask about packages</p>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl shadow p-5 flex items-center space-x-4">
+      <img src="https://storage.googleapis.com/a1aa/image/fb78a8db-5807-4bff-86e2-0f33de37963f.jpg" class="w-14 h-14 rounded" alt="Icon">
+      <div>
+        <h2 class="font-bold text-lg">Trainers</h2>
+        <p>Meet certified pros</p>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl shadow p-5 flex items-center space-x-4">
+      <img src="https://storage.googleapis.com/a1aa/image/48ef6c12-4ac0-4604-bd7f-85cba22f90ed.jpg" class="w-14 h-14 rounded" alt="Icon">
+      <div>
+        <h2 class="font-bold text-lg">Photos</h2>
+        <p>Gallery & tour</p>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl shadow p-5 flex items-center space-x-4">
+      <img src="https://storage.googleapis.com/a1aa/image/ab8cfa6f-dfa7-4df7-81d2-bc9cd3deaa89.jpg" class="w-14 h-14 rounded" alt="Icon">
+      <div>
+        <h2 class="font-bold text-lg">Workout Plans</h2>
+        <p>Customized routines</p>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl shadow p-5 flex items-center space-x-4">
+      <img src="https://storage.googleapis.com/a1aa/image/c9f47809-0593-4682-8f46-d21575885777.jpg" class="w-14 h-14 rounded" alt="Icon">
+      <div>
+        <h2 class="font-bold text-lg">Timings</h2>
+        <p>Gym open hours</p>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl shadow p-5 flex items-center space-x-4">
+      <img src="https://storage.googleapis.com/a1aa/image/bc2f36cb-3fcb-4cd8-9855-d7d28d91210d.jpg" class="w-14 h-14 rounded" alt="Icon">
+      <div>
+        <h2 class="font-bold text-lg">Membership</h2>
+        <p>Join now</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WhatsApp Icon -->
+  <button class="fixed bottom-6 right-6 z-50">
+    <img src="https://assets.onecompiler.app/437qfd8zj/3ww47radw/1000163972.png" alt="WhatsApp"
+         class="w-14 h-14 rounded-full object-cover" />
+  </button>
+
+  <!-- Map Overlay -->
+  <div id="mapModal" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex justify-center items-center">
+    <div class="bg-white w-[95%] max-w-md rounded-xl overflow-hidden">
+      <div class="flex justify-between items-center bg-[#374151] text-white px-4 py-3">
+        <button onclick="closeMap()" class="text-xl font-bold">×</button>
+        <span class="text-sm font-medium">Fitmax Location</span>
+        <a href="https://goo.gl/maps/ibWKx2nsr54MSvcYA" target="_blank" class="text-sm underline">Open in Map</a>
+      </div>
+      <iframe
+        src="https://www.google.com/maps?q=Fitmax%20Fitness%20club%20and%20Muti-Gym&output=embed"
+        class="w-full h-80 border-none"
+        loading="lazy"
+        allowfullscreen
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+  </div>
+
+  <script>
+    function setVH() {
+      document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px');
+    }
+    window.addEventListener('resize', setVH);
+    setVH();
+
+    const openMapBtn = document.getElementById('openMapBtn');
+    const mapModal = document.getElementById('mapModal');
+    openMapBtn.addEventListener('click', () => mapModal.classList.remove('hidden'));
+    function closeMap() {
+      mapModal.classList.add('hidden');
+    }
+  </script>
+
+</body>
+</html>

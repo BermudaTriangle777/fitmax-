@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fullscreen Zoomed iFrame</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      background: transparent;
+    }
+
+    .iframe-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .iframe-wrapper iframe {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 675px; /* Original width */
+      height: 1067px; /* Original height */
+      transform-origin: center center;
+      border: none;
+      transform: translate(-50%, -50%); /* Center the iframe */
+    }
+
+    .img {
+      position: absolute;
+      transform-origin: center center;
+      transition: all 2s ease-out;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    #img1 {
+      right: -1350px;
+      bottom: 450px;
+      transform: scale(0.45) rotate(59.9deg);
+    }
+
+    #img2 {
+      right: -1090px;
+      top: 1650px;
+      transform: scale(0.917) rotate(59.8deg);
+    }
+
+    @keyframes moveLeftWithY {
+      to {
+        transform: translateX(-300px) translateY(-1200px) scale(0.45) rotate(59.9deg);
+      }
+    }
+
+    @keyframes moveRightWithY {
+      to {
+        transform: translateX(400px) translateY(1200px) scale(0.917) rotate(59.8deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background fullscreen iframe -->
+  <div class="iframe-wrapper">
+    <iframe src="homepage.html" id="mainIframe"></iframe>
+  </div>
+
+  <!-- Foreground animations -->
+  <img src="https://assets.onecompiler.app/43b7v7mer/3ww47radw/1000163951.png" id="img1" class="img">
+  <img src="https://assets.onecompiler.app/43b7v7mer/3ww47radw/1000163963.png" id="img2" class="img">
+
+  <script>
+    const iframe = document.getElementById("mainIframe");
+
+    // Calculate scale to fit the iframe within the viewport
+    const scaleX = window.innerWidth / 675;
+    const scaleY = window.innerHeight / 1067;
+    const scaleToFill = Math.max(scaleX, scaleY); // Use the larger scale to fill the screen
+
+    // Apply the scale to the iframe
+    iframe.style.transform += ` scale(${scaleToFill})`;
+
+    window.onload = () => {
+      setTimeout(() => {
+        img1.style.animation = "moveLeftWithY 1s ease-out forwards";
+        img2.style.animation = "moveRightWithY 1s ease-out forwards";
+      }, 1000);
+    };
+  </script>
+
+</body>
+</html>

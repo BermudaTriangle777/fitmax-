@@ -17,16 +17,24 @@
       background-color: #effffa;
       overflow-x: hidden;
     }
+    .top-box {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 10px; /* Adjust the height of the rectangle box */
+      background-color: #effffa; /* Match the background color */
+      z-index: 10; /* Ensure it is on top */
+    }
     .icon-card {
       transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
-      padding: 20px;
+      padding: 30px;
       border-radius: 15px;
       box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
       background-color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 24px; /* Increased margin */
     }
     .icon-card:hover {
       transform: scale(1.05);
@@ -54,33 +62,18 @@
   </style>
 </head>
 <body class="relative overflow-x-hidden bg-[#effffa]">
-  <!-- Fixed Top Layer -->
-  <div class="w-full z-10 bg-[#effffa]">
-    <div class="p-4 pt-6 relative">
-      <!-- Call Button (left) -->
-      <a href="tel:9961955414">
-        <button class="absolute left-4 top-1 flex items-center space-x-2 bg-[#374151] text-white rounded-md px-4 py-2 z-50">
-          <i class="fas fa-phone-alt text-lg"></i>
-          <span>Call</span>
-        </button>
-      </a>
-      <!-- Directions Button (right) -->
-      <button id="openMapBtn" class="absolute right-4 top-1 flex items-center space-x-2 bg-[#374151] text-white rounded-md px-4 py-2 z-50">
-        <i class="fas fa-map-marker-alt text-lg"></i>
-        <span>Directions</span>
-      </button>
-    </div>
-  </div>
+  <!-- Rectangle Box -->
+  <div class="top-box"></div>
 
   <!-- Logo (Scrollable) -->
-  <div class="flex justify-center mt-12 mb-4">
+  <div class="flex justify-center mt-[60px] mb-4"> <!-- Adjusted margin-top here to push content down -->
     <img src="https://assets.onecompiler.app/43b7v7mer/3ww47radw/1000163970.jpg" alt="FitMax logo"
-      class="max-w-full h-auto w-72 sm:w-[400px]" />
+      class="max-w-full h-auto w-80" />
   </div>
 
-  <!-- Scrollable Content -->
-  <div class="pt-[40px] pb-28 px-4 space-y-8"> <!-- Increased space between icons -->
-    <!-- 9 Icon Cards (added more cards) -->
+  <!-- Content Below Box (moved down) -->
+  <div class="pt-[60px] pb-28 px-4 space-y-14"> <!-- Adjusted padding-top here to move content below the box -->
+    <!-- 9 Icon Cards -->
     <div class="icon-card">
       <img src="https://storage.googleapis.com/a1aa/image/bda8cb5d-aceb-4156-b9cd-992a5b9b0bbd.jpg" alt="Enquiry Icon">
       <div class="text-content">
@@ -146,44 +139,5 @@
       </div>
     </div>
   </div>
-
-  <!-- WhatsApp Icon -->
-  <button class="fixed bottom-6 right-6 z-50">
-    <img src="https://assets.onecompiler.app/437qfd8zj/3ww47radw/1000163972.png" alt="WhatsApp"
-      class="w-14 h-14 rounded-full object-cover shadow-lg" />
-  </button>
-
-  <!-- Map Overlay -->
-  <div id="mapModal" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex justify-center items-center">
-    <div class="bg-white w-[95%] max-w-md rounded-xl overflow-hidden">
-      <div class="flex justify-between items-center bg-[#374151] text-white px-4 py-3">
-        <button onclick="closeMap()" class="text-xl font-bold">×</button>
-        <span class="text-sm font-medium">Fitmax Location</span>
-        <a href="https://goo.gl/maps/ibWKx2nsr54MSvcYA" target="_blank" class="text-sm underline">Open in Map</a>
-      </div>
-      <iframe
-        src="https://www.google.com/maps?q=Fitmax%20Fitness%20club%20and%20Muti-Gym&output=embed"
-        class="w-full h-80 border-none"
-        loading="lazy"
-        allowfullscreen
-        referrerpolicy="no-referrer-when-downgrade"
-      ></iframe>
-    </div>
-  </div>
-
-  <script>
-    function setVH() {
-      document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px');
-    }
-    window.addEventListener('resize', setVH);
-    setVH();
-
-    const openMapBtn = document.getElementById('openMapBtn');
-    const mapModal = document.getElementById('mapModal');
-    openMapBtn.addEventListener('click', () => mapModal.classList.remove('hidden'));
-    function closeMap() {
-      mapModal.classList.add('hidden');
-    }
-  </script>
 </body>
 </html>

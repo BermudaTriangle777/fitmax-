@@ -2,142 +2,286 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Fitmax</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --vh: 100%;
-    }
     body {
       font-family: "Poppins", sans-serif;
+      background-color: transparent;
       margin: 0;
-      background-color: #effffa;
       overflow-x: hidden;
+      -webkit-user-select: none;  /* Disable text selection on iOS */
+      -moz-user-select: none;     /* Disable text selection on Firefox */
+      -ms-user-select: none;      /* Disable text selection on IE/Edge */
+      user-select: none;          /* Standard for modern browsers */
+      height: 100%;
     }
-    .top-box {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 10px; /* Adjust the height of the rectangle box */
-      background-color: #effffa; /* Match the background color */
-      z-index: 10; /* Ensure it is on top */
+
+    img {
+      pointer-events: none;  /* Disable right-click or long press on images */
     }
-    .icon-card {
-      transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      background-color: #ffffff;
+
+    .action-button {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      background-color: #374151;
+      color: white;
+      border-radius: 15px;
+      padding: 15px 25px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.3s ease, background-color 0.3s ease;
+      z-index: 50;
     }
-    .icon-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      background-color: #f8fafc;
+
+    .action-button.fade-in {
+      opacity: 1;
     }
-    .icon-card img {
-      width: 60px;
-      height: 60px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+    .action-button:hover {
+      transform: scale(1.1);
+      background-color: #2d2f38;
     }
-    .icon-card .text-content {
-      margin-left: 16px;
+
+    /* Blink white animation */
+    @keyframes blinkWhite {
+      0%, 100% { background-color: #374151; }
+      50% { background-color: #ffffff; color: #374151; }
     }
-    .icon-card .text-content h2 {
-      font-size: 1.25rem;
-      font-weight: bold;
-      margin-bottom: 4px;
+
+    /* Fade back to normal animation */
+    @keyframes fadeBack {
+      from { background-color: #ffffff; color: #374151; }
+      to { background-color: #374151; color: #ffffff; }
     }
-    .icon-card .text-content p {
-      font-size: 1rem;
-      color: #6b7280;
+
+    .blink-white {
+      animation: blinkWhite 0.8s infinite;
     }
+
+    .fade-back {
+      animation: fadeBack 1s forwards;
+    }
+
+    #mapModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: 50;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    #mapModal.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    #mapModal .map-content {
+      position: relative;
+      background-color: white;
+      width: 80%;
+      max-width: 600px;
+      height: 70%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border-radius: 15px;
+      transform: translateY(50px);
+      transition: transform 0.5s ease;
+    }
+
+    #mapModal.show .map-content {
+      transform: translateY(0);
+    }
+
+    #mapModal iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      transition: transform 0.5s ease;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #374151;
+      color: white;
+      font-size: 24px;
+      padding: 5px 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .account-name, .account-info {
+      display: none;
+    }
+
+iframe {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  z-index: -1;  /* Make sure it's behind the buttons */
+}
   </style>
 </head>
-<body class="relative overflow-x-hidden bg-[#effffa]">
-  <!-- Rectangle Box -->
-  <div class="top-box"></div>
+<body>
 
-  <!-- Logo (Scrollable) -->
-  <div class="flex justify-center mt-[60px] mb-4"> <!-- Adjusted margin-top here to push content down -->
-    <img src="https://assets.onecompiler.app/43b7v7mer/3ww47radw/1000163970.jpg" alt="FitMax logo"
-      class="max-w-full h-auto w-80" />
+<div class="w-full z-10 bg-transparent">
+  <div class="p-4 pt-6 relative">
+    <button id="callBtn" class="absolute left-4 top-1 action-button z-50">
+      <i class="fas fa-phone-alt"></i>
+      <span>Call</span>
+    </button>
+
+    <button id="openMapBtn" class="absolute right-4 top-1 action-button z-50">
+      <i class="fas fa-map-marker-alt"></i>
+      <span>Directions</span>
+    </button>
   </div>
+</div>
 
-  <!-- Content Below Box (moved down) -->
-  <div class="pt-[60px] pb-28 px-4 space-y-14"> <!-- Adjusted padding-top here to move content below the box -->
-    <!-- 9 Icon Cards -->
-    <div class="icon-card">
-      <img src="https://storage.googleapis.com/a1aa/image/bda8cb5d-aceb-4156-b9cd-992a5b9b0bbd.jpg" alt="Enquiry Icon">
-      <div class="text-content">
-        <h2>Enquiry</h2>
-        <p>Ask about packages</p>
-      </div>
+<!-- Map Modal with overlay header -->
+<div id="mapModal" class="flex">
+  <div class="map-content relative">
+    <div class="absolute top-0 left-0 w-full z-10 bg-[#374151] text-white px-4 py-3 flex justify-between items-center" style="height: 55px;">
+      <button id="closeMapBtn" class="text-xl font-bold">×</button>
+      <span class="text-sm font-medium">Fitmax Location</span>
+      <a href="https://goo.gl/maps/ibWKx2nsr54MSvcYA" target="_blank" class="text-sm underline">Open in Map</a>
     </div>
-    <div class="icon-card">
-      <img src="https://assets.onecompiler.app/437qfd8zj/3ww47radw/1000164059.png" alt="Trainers Icon">
-      <div class="text-content">
-        <h2>Trainers</h2>
-        <p>Meet certified pros</p>
-      </div>
-    </div>
-    <div class="icon-card">
-      <img src="https://assets.onecompiler.app/437qfd8zj/3ww47radw/1000164062.png" alt="Photos Icon">
-      <div class="text-content">
-        <h2>Packages</h2>
-        <p>Gallery & tour</p>
-      </div>
-    </div>
-    <div class="icon-card">
-      <img src="https://assets.onecompiler.app/437qfd8zj/3ww47radw/1000164063.png" alt="Workout Plans Icon">
-      <div class="text-content">
-        <h2>Offers</h2>
-        <p>Customized routines</p>
-      </div>
-    </div>
-    <div class="icon-card">
-      <img src="https://storage.googleapis.com/a1aa/image/c9f47809-0593-4682-8f46-d21575885777.jpg" alt="Timings Icon">
-      <div class="text-content">
-        <h2>Timings</h2>
-        <p>Gym open hours</p>
-      </div>
-    </div>
-    <div class="icon-card">
-      <img src="https://storage.googleapis.com/a1aa/image/bc2f36cb-3fcb-4cd8-9855-d7d28d91210d.jpg" alt="Membership Icon">
-      <div class="text-content">
-        <h2>Membership</h2>
-        <p>Join now</p>
-      </div>
-    </div>
-    <!-- Added more icons -->
-    <div class="icon-card">
-      <img src="https://storage.googleapis.com/a1aa/image/72d8f6d9-314a-4b6c-b62b-84fdb237c321.jpg" alt="Diet Icon">
-      <div class="text-content">
-        <h2>Diet Plans</h2>
-        <p>Healthy nutrition</p>
-      </div>
-    </div>
-    <div class="icon-card">
-      <img src="https://storage.googleapis.com/a1aa/image/74bf77c4-99cc-4425-8c6b-95f07e57d3da.jpg" alt="Classes Icon">
-      <div class="text-content">
-        <h2>Classes</h2>
-        <p>Group sessions</p>
-      </div>
-    </div>
-    <div class="icon-card">
-      <img src="https://storage.googleapis.com/a1aa/image/c49c4228-8046-4670-bb56-bb6cc7b90c93.jpg" alt="Events Icon">
-      <div class="text-content">
-        <h2>Events</h2>
-        <p>Upcoming programs</p>
-      </div>
+
+    <div style="overflow: hidden; height: 100%; flex-grow: 1;">
+      <iframe
+        src="https://www.google.com/maps/d/embed?mid=1Ynly8IC7-zu9l-PftTu4HxCJXwn0Rp8"
+        style="margin-top: -80px; height: calc(100% + 80px); width: 100%; border: none;"
+        loading="lazy"
+        allowfullscreen="">
+      </iframe>
     </div>
   </div>
+</div>
+
+<button id="whatsappBtn" class="fixed bottom-6 right-6 z-50">
+  <img src="https://assets.onecompiler.app/437qfd8zj/3ww47radw/1000163972.png"
+    alt="WhatsApp"
+    class="w-14 h-14 rounded-full object-cover bg-transparent" />
+</button>
+
+<iframe
+  src="fitmax.html"
+  style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: -1;"
+  frameborder="0"
+></iframe>
+
+<audio id="soundCall" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3"></audio>
+<audio id="soundMap" src="https://assets.mixkit.co/sfx/preview/mixkit-classic-click-1117.mp3"></audio>
+<audio id="soundWhatsapp" src="https://assets.mixkit.co/sfx/preview/mixkit-game-click-1114.mp3"></audio>
+<audio id="soundClick" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3"></audio>
+
+<script>
+const callBtn = document.getElementById('callBtn');
+const openMapBtn = document.getElementById('openMapBtn');
+const closeMapBtn = document.getElementById('closeMapBtn');
+const whatsappBtn = document.getElementById('whatsappBtn');
+const mapModal = document.getElementById('mapModal');
+
+const soundCall = document.getElementById('soundCall');
+const soundMap = document.getElementById('soundMap');
+const soundWhatsapp = document.getElementById('soundWhatsapp');
+const soundClick = document.getElementById('soundClick');
+
+// Fade-in buttons
+window.onload = () => {
+  document.querySelectorAll('.action-button').forEach(button => {
+    button.classList.add('fade-in');
+  });
+};
+
+// Call Button click
+callBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  soundCall.play();
+  if (navigator.vibrate) navigator.vibrate([50]);
+
+  // Reset animation by removing and re-adding the class
+  callBtn.classList.remove('blink-white', 'fade-back');
+  void callBtn.offsetWidth;  // Triggers a reflow, forcing a restart of the animation
+  callBtn.classList.add('blink-white');
+  
+  setTimeout(() => {
+    callBtn.classList.remove('blink-white');
+    callBtn.classList.add('fade-back');
+  }, 4000);
+  
+  setTimeout(() => {
+    window.location.href = "tel:9961955414";
+  }, 600);
+});
+
+// Directions Button click
+openMapBtn.addEventListener('click', () => {
+  soundMap.play();
+  if (navigator.vibrate) navigator.vibrate([80, 20]);
+
+  // Reset animation by removing and re-adding the class
+  openMapBtn.classList.remove('blink-white', 'fade-back');
+  void openMapBtn.offsetWidth;  // Triggers a reflow, forcing a restart of the animation
+  openMapBtn.classList.add('blink-white');
+
+  mapModal.classList.add('show');
+});
+
+// Close Map Modal
+closeMapBtn.addEventListener('click', () => {
+  soundMap.play();
+  if (navigator.vibrate) navigator.vibrate([100, 30, 100]);
+  
+  // Reset animation by removing and re-adding the class
+  openMapBtn.classList.remove('blink-white', 'fade-back');
+  void openMapBtn.offsetWidth;  // Triggers a reflow, forcing a restart of the animation
+  openMapBtn.classList.add('fade-back');
+  
+  mapModal.classList.remove('show');
+  
+  // Extra: Play Call sound too after closing
+  setTimeout(() => {
+    soundCall.play();
+  }, 500);
+});
+
+// WhatsApp sound
+whatsappBtn.addEventListener('click', () => {
+  soundWhatsapp.play();
+});
+
+// Global click sound and vibration
+document.body.addEventListener('click', (event) => {
+  soundClick.play();
+  if (navigator.vibrate) navigator.vibrate([30]);  // Short vibration on click
+});
+
+// WhatsApp Button click
+whatsappBtn.addEventListener('click', () => {
+  soundWhatsapp.play();
+  if (navigator.vibrate) navigator.vibrate([60, 20]);
+  
+  setTimeout(() => {
+    window.open("https://api.whatsapp.com/send?phone=919961955414&text=Hy%20I%20am%20interested%20in%20your%20fitness%20center.%20please%20text%20back.", "_blank");
+  }, 300); // Small delay to let the sound play
+});
+</script>
+
 </body>
 </html>
